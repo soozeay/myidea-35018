@@ -3,9 +3,18 @@ class IdeasController < ApplicationController
 
   # GET /ideas
   def index
-    @ideas = Idea.all
-
-    render json: @ideas
+    if params.include? "category_name"
+      @category = Category.find_by(name: params[:category_name])
+      if @category == nil
+        render status: 404, json: { status: 404 }
+      else
+        @ideas = Idea.joins(:category).where(category_id: @category.id).select('ideas.id, name as category_name, body')
+        render json: @ideas
+      end
+    else
+      @ideas = Idea.joins(:category).select('ideas.id, name as category_name, body')
+      render json: @ideas
+    end
   end
 
   # GET /ideas/1
