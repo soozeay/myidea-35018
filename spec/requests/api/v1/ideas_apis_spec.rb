@@ -45,7 +45,6 @@ RSpec.describe 'IdeasApi', type: :request do
         @category_idea.save
         # FactoryBotとはまた別のcategory_nameを送信
         get '/api/v1/ideas', params: { category_name: '存在しない' }
-        json = JSON.parse(response.body)
         expect(response.status).to eq(404)
       end
       it 'リクエストのキーがcategory_name以外では絞った表示ができず、全て返却されてしまう' do
@@ -64,7 +63,6 @@ RSpec.describe 'IdeasApi', type: :request do
     context '登録できるとき' do
       it '正しくリクエストを送信すれば登録できる' do
         post '/api/v1/ideas', params: { category_name: @category_idea.category_name, body: @category_idea.body }
-        json = JSON.parse(response.body)
         expect(response.status).to eq(201)
       end
       it '同じcategoryでアイデアを登録する時、categoriesテーブルのレコードは1つしか増えていない事を確認する' do
@@ -84,13 +82,11 @@ RSpec.describe 'IdeasApi', type: :request do
       it 'category_nameが空では登録できない' do
         @category_idea.category_name = ''
         post '/api/v1/ideas', params: { category_name: @category_idea.category_name, body: @category_idea.body }
-        json = JSON.parse(response.body)
         expect(response.status).to eq(422)
       end
       it 'bodyが空では登録できない' do
         @category_idea.body = ''
         post '/api/v1/ideas', params: { category_name: @category_idea.category_name, body: @category_idea.body }
-        json = JSON.parse(response.body)
         expect(response.status).to eq(422)
       end
     end
