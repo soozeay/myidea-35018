@@ -9,7 +9,7 @@ module Api
       if params.include? "category_name"
         @category = Category.find_by(name: params[:category_name])
         if @category == nil
-          render status: 404, json: { status: 404 }
+          render status: 404, json: {  errors: { title: 'アイデアが見つかりません', detail: 'ご指定のカテゴリー名と一致するアイデアが見つかりません' },status: 404 }
         else
           @ideas = Idea.joins(:category).where(category_id: @category.id).select('ideas.id, name as category_name, body')
           render json: @ideas
@@ -30,9 +30,9 @@ module Api
     @category_idea = CategoryIdea.new(idea_params)
     if @category_idea.valid?
       @category_idea.save
-      render status: 201, json: { status: 201 }
+      render status: 201, json: { success: { title: '登録が完了しました' },status: 201 }
     else
-      render status: 422, json: { status: 422 }
+      render status: 422, json: { errors: { title: '登録できませんでした', detail: @category_idea.errors.full_messages }, status: 422 }
     end
   end
 
