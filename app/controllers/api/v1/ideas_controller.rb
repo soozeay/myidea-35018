@@ -2,6 +2,7 @@ module Api
   module V1
     class IdeasController < ApplicationController
     before_action :set_idea, only: [:show, :update, :destroy]
+    before_action :idea_params, only: :index
 
     # GET /ideas
     def index
@@ -19,16 +20,35 @@ module Api
       end
     end
 
-    # POST /ideas
-    def create
-      @category_idea = CategoryIdea.new(idea_params)
-      if @category_idea.valid?
-        @category_idea.save
-        render status: 201, json: { status: 201 }
-      else
-        render status: 422, json: { status: 422 }
-      end
+    # GET /ideas/1
+  def show
+    render json: @idea
+  end
+
+  # POST /ideas
+  def create
+    @category_idea = CategoryIdea.new(idea_params)
+    if @category_idea.valid?
+      @category_idea.save
+      render status: 201, json: { status: 201 }
+    else
+      render status: 422, json: { status: 422 }
     end
+  end
+
+  # PATCH/PUT /ideas/1
+  def update
+    if @idea.update(idea_params)
+      render json: @idea
+    else
+      render json: @idea.errors, status: :unprocessable_entity
+    end
+  end
+
+  # DELETE /ideas/1
+  def destroy
+    @idea.destroy
+  end
 
     private
       # Use callbacks to share common setup or constraints between actions.
