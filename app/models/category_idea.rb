@@ -13,6 +13,5 @@ class CategoryIdea
       idea = Idea.new(body: body, category_id: category.id)
       idea.save!
     end
-
   end
 end
