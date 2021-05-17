@@ -1,0 +1,6 @@
+ja:
+  activemodel:
+    attributes:
+      category_idea:
+        category_name: カテゴリー名
+        body: 本文
